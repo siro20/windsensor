@@ -41,6 +41,6 @@ It samples the frequency on GPIO 0, converts it to rpm, and transmit this value 
 
 run:
 ----------------
-nodejs server.js
+node server.js
 
 python windsensorserver.py

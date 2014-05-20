@@ -1,0 +1,295 @@
+extends layoutdesktop
+
+block content
+	div.container
+		div.row
+			div
+				ul.nav.nav-tabs
+					li: a(href='#tabyear', data-toggle='tab') year
+					li: a(href='#tabmonth', data-toggle='tab') month
+					li: a(href='#tabdays', data-toggle='tab') day
+					li.active: a(href='#tabnow', data-toggle='tab') now
+					li: a(href='#tababout', data-toggle='tab') about
+				div.tab-content
+					div(id='tabyear').tab-pane
+						div.collapse.navbar-collapse
+							ul.nav.navbar-nav
+								li.dropdown
+									a(href='#' data-toggle='dropdown' class='dropdown-toggle') change year
+										b(class='caret')
+									ul(id='dd_years').dropdown-menu
+										each y in years
+											li(id='#{y}' name='year').dpmenu #{y}
+						
+						h1(style='display:inline') Year
+						h1(id='title-year' style='display:inline')
+						h3 histogramm
+						div.well
+							div(id='graph-hist-year').graph-container.multi
+								p(id='graph-hist-year-label0').y_label
+								div(id='graph-hist-year-axis0').y_axis 
+								div(id='graph-hist-year-chart').chart
+								div(id='graph-hist-year-legend').legend
+								div(id='graph-hist-year-axis1').x_axis
+								p(id='graph-hist-year-label1').x_label
+							div.btn-group.btn-toggle(id='graph-hist-year-btn1')
+								button.btn.btn-lg.btn-default.enabled hide zero row
+								button.btn.btn-lg.btn-default.btn-primary.active show zero row
+						h3 histogramm
+						div.well
+							div(id='graph-hist-power-year').graph-container.multi
+								p(id='graph-hist-power-year-label0').y_label
+								div(id='graph-hist-power-year-axis0').y_axis
+								div(id='graph-hist-power-year-chart').chart
+								div(id='graph-hist-power-year-legend').legend
+								div(id='graph-hist-power-year-axis1').x_axis
+								p(id='graph-hist-power-year-label1').x_label
+						h3 average windspeed
+						div.well
+							div(id='graph-aver-speed-year' name='graph').graph-container
+								p(id='graph-aver-speed-year-label0').y_label
+								div(id='graph-aver-speed-year-axis0').y_axis
+								div(id='graph-aver-speed-year-chart').chart
+								div(id='graph-aver-speed-year-legend').legend
+								div(id='graph-aver-speed-year-axis1').x_axis
+								p(id='graph-aver-speed-year-label1').x_label
+						h3 windspeed over 4 m/s
+						div.well
+							div(id='graph-over-4msec-year' name='graph').graph-container
+								p(id='graph-over-4msec-year-label0').y_label
+								div(id='graph-over-4msec-year-axis0').y_axis
+								div(id='graph-over-4msec-year-chart').chart
+								div(id='graph-over-4msec-year-legend').legend
+								div(id='graph-over-4msec-year-axis1').x_axis
+								p(id='graph-over-4msec-year-label1').x_label
+						h3 maximum work done by wind at 1qm rotorarea
+						div.well
+							div(id='graph-powerval-year' name='graph').graph-container
+								p(id='graph-powerval-year-label0').y_label
+								div(id='graph-powerval-year-axis0').y_axis
+								div(id='graph-powerval-year-chart').chart
+								div(id='graph-powerval-year-legend').legend
+								div(id='graph-powerval-year-axis1').x_axis
+								p(id='graph-powerval-year-label1').x_label
+						h3 electrical work
+						div.well
+							div(id='graph-electricpowerval-year' name='graph').graph-container
+								p(id='graph-electricpowerval-year-label0').y_label
+								div(id='graph-electricpowerval-year-axis0').y_axis
+								div(id='graph-electricpowerval-year-chart').chart
+								div(id='graph-electricpowerval-year-legend').legend
+								div(id='graph-electricpowerval-year-axis1').x_axis
+								p(id='graph-electricpowerval-year-label1').x_label
+						h3 actual values
+						div.well
+							div
+								p(style='display:inline') maximum windspeed:
+								p(id='top-speed-year' style='display:inline')
+							div
+								p(style='display:inline') average windspeed:
+								p(id='aver-speed-year' style='display:inline')
+							div
+								p(style='display:inline') lowest windspeed:
+								p(id='bottom-speed-year' style='display:inline')
+							div
+								p(style='display:inline') maximum work done by wind at 1qm rotorarea:
+								p(id='powerval-year' style='display:inline')
+							div
+								p(style='display:inline') seconds total:
+								p(id='seconds-sum-year' style='display:inline')
+							div
+								p(style='display:inline') windspeed over 4 m/s:
+								p(id='seconds-over-4msec-year' style='display:inline')
+							div
+								p(style='display:inline') electrical work:
+								p(id='electricpowerval-year' style='display:inline')
+								
+					div(id='tabmonth').tab-pane
+						div.collapse.navbar-collapse
+							ul.nav.navbar-nav
+								li.dropdown
+									a(href='#' data-toggle='dropdown' class='dropdown-toggle') change month
+										b(class='caret')
+									ul(id='dd_month').dropdown-menu
+										each m in month
+											li(id='#{m}' name='month').dpmenu #{m}
+						h1(style='display:inline') month
+						h1(id='title-month' style='display:inline')
+						h3 histogramm
+						div.well
+							div(id='graph-hist-month').graph-container.multi
+								p(id='graph-hist-month-label0').y_label
+								div(id='graph-hist-month-axis0').y_axis 
+								div(id='graph-hist-month-chart').chart
+								div(id='graph-hist-month-legend').legend
+								div(id='graph-hist-month-axis1').x_axis
+								p(id='graph-hist-month-label1').x_label
+							div.btn-group.btn-toggle(id='graph-hist-month-btn1')
+								button.btn.btn-lg.btn-default.enabled hide zero row
+								button.btn.btn-lg.btn-default.btn-primary.active show zero row
+						h3 histogramm 
+						div.well
+							div(id='graph-hist-power-month').graph-container.multi
+								p(id='graph-hist-power-month-label0').y_label
+								div(id='graph-hist-power-month-axis0').y_axis
+								div(id='graph-hist-power-month-chart').chart
+								div(id='graph-hist-power-month-legend').legend
+								div(id='graph-hist-power-month-axis1').x_axis
+								p(id='graph-hist-power-month-label1').x_label
+						h3 average windspeed
+						div.well
+							div(id='graph-aver-speed-month' name='graph').graph-container
+								p(id='graph-aver-speed-month-label0').y_label
+								div(id='graph-aver-speed-month-axis0').y_axis
+								div(id='graph-aver-speed-month-chart').chart
+								div(id='graph-aver-speed-month-legend').legend
+								div(id='graph-aver-speed-month-axis1').x_axis
+								p(id='graph-aver-speed-month-label1').x_label
+						h3 windspeed over 4 m/s
+						div.well
+							div(id='graph-over-4msec-month' name='graph').graph-container
+								p(id='graph-over-4msec-month-label0').y_label
+								div(id='graph-over-4msec-month-axis0').y_axis
+								div(id='graph-over-4msec-month-chart').chart
+								div(id='graph-over-4msec-month-legend').legend
+								div(id='graph-over-4msec-month-axis1').x_axis
+								p(id='graph-over-4msec-month-label1').x_label
+						h3 maximum work done by wind at 1qm rotorarea
+						div.well
+							div(id='graph-powerval-month' name='graph').graph-container
+								p(id='graph-powerval-month-label0').y_label
+								div(id='graph-powerval-month-axis0').y_axis
+								div(id='graph-powerval-month-chart').chart
+								div(id='graph-powerval-month-legend').legend
+								div(id='graph-powerval-month-axis1').x_axis
+								p(id='graph-powerval-month-label1').x_label
+						h3 electrical work
+						div.well
+							div(id='graph-electricpowerval-month' name='graph').graph-container
+								p(id='graph-electricpowerval-month-label0').y_label
+								div(id='graph-electricpowerval-month-axis0').y_axis
+								div(id='graph-electricpowerval-month-chart').chart
+								div(id='graph-electricpowerval-month-legend').legend
+								div(id='graph-electricpowerval-month-axis1').x_axis
+								p(id='graph-electricpowerval-month-label1').x_label
+						h3 actual values
+						div.well
+							div
+								p(style='display:inline') maximum windspeed:
+								p(id='top-speed-month' style='display:inline')
+							div
+								p(style='display:inline') average windspeed:
+								p(id='aver-speed-month' style='display:inline')
+							div
+								p(style='display:inline') lowest windspeed:
+								p(id='bottom-speed-month' style='display:inline')
+							div
+								p(style='display:inline') maximum work done by wind at 1qm rotorarea:
+								p(id='powerval-month' style='display:inline')
+							div
+								p(style='display:inline') seconds total:
+								p(id='seconds-sum-month' style='display:inline')
+							div
+								p(style='display:inline') windspeed over 4 m/s:
+								p(id='seconds-over-4msec-month' style='display:inline')
+							div
+								p(style='display:inline') electrical work:
+								p(id='electricpowerval-month' style='display:inline')
+					div(id='tabdays').tab-pane
+						div.collapse.navbar-collapse
+							ul.nav.navbar-nav
+								li.dropdown
+									a(href='#' data-toggle='dropdown' class='dropdown-toggle') change day
+										b(class='caret') 
+									ul(id='dd_days').dropdown-menu
+										each d in days
+											li(id='#{d}' name='day').dpmenu #{d}
+						h1(style='display:inline') day
+						h1(id='title-day' style='display:inline')
+						h3 histogramm
+						div.well
+							div(id='graph-hist-day').graph-container.multi
+								p(id='graph-hist-day-label0').y_label
+								div(id='graph-hist-day-axis0').y_axis
+								div(id='graph-hist-day-chart').chart
+								div(id='graph-hist-day-legend').legend
+								div(id='graph-hist-day-axis1').x_axis
+								p(id='graph-hist-day-label1').x_label
+						h3 histogramm
+						div.well
+							div(id='graph-hist-power-day').graph-container.multi
+								p(id='graph-hist-power-day-label0').y_label
+								div(id='graph-hist-power-day-axis0').y_axis
+								div(id='graph-hist-power-day-chart').chart
+								div(id='graph-hist-power-day-legend').legend
+								div(id='graph-hist-power-day-axis1').x_axis
+								p(id='graph-hist-power-day-label1').x_label
+						h3 actual values
+						div.well
+							div
+								p(style='display:inline') maximum windspeed:
+								p(id='top-speed-day' style='display:inline')
+							div
+								p(style='display:inline') average windspeed:
+								p(id='aver-speed-day' style='display:inline')
+							div
+								p(style='display:inline') lowest windspeed:
+								p(id='bottom-speed-day' style='display:inline')
+							div
+								p(style='display:inline') maximum work done by wind at 1qm rotorarea:
+								p(id='powerval-day' style='display:inline')
+							div
+								p(style='display:inline') seconds total:               
+								p(id='seconds-sum-day' style='display:inline')
+							div
+								p(style='display:inline') windspeed over 4 m/s:
+								p(id='seconds-over-4msec-day' style='display:inline')
+							div
+								p(style='display:inline') electrical work:
+								p(id='electricpowerval-day' style='display:inline')
+								
+					div(id='tabnow').tab-pane.active
+						h2 actual values
+						div.well
+							div
+								p(style='display:inline') windspeed:
+								p(id='windspeed-realtime' style='display:inline')
+							div
+								p(style='display:inline') work done by wind at 1qm rotorarea:
+								p(id='powerval-realtime' style='display:inline')
+							div
+								p(style='display:inline') time of measurement:
+								p(id='datetime-realtime' style='display:inline')
+							div
+								p(style='display:inline') electrical work:
+								p(id='electricpowerval-realtime' style='display:inline') 
+							div
+								p(id='status-realtime')
+						h3 Graph
+						div.well
+							div(id='graph-windspeed-realtime' name='graph').graph-container.realtime.line
+								p(id='graph-windspeed-realtime-label0').y_label
+								div(id='graph-windspeed-realtime-axis0').y_axis
+								div(id='graph-windspeed-realtime-chart').chart
+								div(id='graph-windspeed-realtime-legend').legend
+								div(id='graph-windspeed-realtime-axis1').x_axis
+								p(id='graph-windspeed-realtime-label1').x_label
+					div(id='tababout').tab-pane
+						h2 Pictures
+						div.well
+						h2 Location
+						div.well
+							div(id='map' style='width: 80%; height:40%')
+								p Click for map
+						h2 Formulas
+						div.well
+							img(src='windpower.png')
+							br
+							img(src='formelzeichen.png')
+							
+							
+
+block footer
+	div.footer
+		p by Patrick Rudolph
+		a(href='http://4q8.de/?page_id=20') legal notice

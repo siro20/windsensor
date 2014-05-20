@@ -1,0 +1,9 @@
+{
+  "windserver": {
+    "port": 2400,
+    "hostname": "127.0.0.1"
+  },
+  "httpserver": {
+    "port": 4800
+  }
+}

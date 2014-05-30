@@ -1,4 +1,20 @@
 #!/usr/bin/python
+#   networking daemon running on Raspberry PI for wind-measuring
+#   Copyright (C) 2014 Patrick Rudolph
+
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import SocketServer
 import subprocess
 import sys
@@ -39,7 +55,6 @@ def threadeval():
                 imp_per_sec = 0
                 for x in events:
                     x.set()
-                    #x.request.sendall("{'windspeed': %f}" % actual_windspeed_msec)
                 time.sleep(1)
 
 start_new_thread(threadeval, ())

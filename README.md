@@ -44,3 +44,12 @@ run:
 node server.js
 
 python windsensorserver.py
+
+license:
+----------------
+All serverside code is GNU General Public License v3.
+I'm using lot's of Javascript libraries that have it's own licenses (most MIT).
+* http://getbootstrap.com/getting-started/
+* http://d3js.org/
+* http://code.shutterstock.com/rickshaw/
+* http://jquery.com/

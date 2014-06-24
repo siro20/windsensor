@@ -39,6 +39,12 @@ python configuration:
 The python script runs the TCP/IP server on port 2400 as default. At the moment there's no config for the python script.
 It samples the frequency on GPIO 0, converts it to rpm, and transmit this value once a second to all connected TCP/IP clients.
 
+hardware:
+----------------
+* connect an impulse generating wind sensor to GND and GPIO0 (raspberry pi pin3).
+* change the conversion from impulses to m/s in windsensorserver.py
+* the current implementation is for Eltako WS100 
+
 run:
 ----------------
 node server.js

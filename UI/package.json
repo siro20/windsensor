@@ -1,0 +1,16 @@
+{
+    "name": "windsensor-ui",
+    "version": "0.0.1",
+    "private": true,
+    "description": "interactive http server for wind histogramms and realtime graphs",
+    "author": "Patrick Rudolph",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "express": "~4.0.0",
+	"recon": "~0.0.8",
+	"socket.io": "~1.1.0",
+	"jade": "~1.6.0"
+    }
+}

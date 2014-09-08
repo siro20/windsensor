@@ -11,6 +11,10 @@ required nodejs modules:
 * recon
 * socket.io
 
+ cd to directory UI
+ run "npm install" to install all modules.
+ run "npm start" to launch the application.
+
 nodejs configuration:
 -------------
 file config.json:

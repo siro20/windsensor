@@ -51,10 +51,6 @@ var conn = recon(configuration.windserver.hostname, configuration.windserver.por
 
 var io = require('socket.io').listen(http.server);
 
-io.enable('browser client minification');  // send minified client
-io.enable('browser client etag');          // apply etag caching logic based on version number
-io.enable('browser client gzip');          // gzip the file
-//io.set('log level', 1);                    // reduce logging
 var update_histogram = function(val){
 	var now = new Date();
 	var now_day = now.getDate().toString();

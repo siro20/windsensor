@@ -2,25 +2,66 @@ var socket = io.connect();
 var sliderTimeout = 0;
 var packet;
 var graphdata = {};
-var now = new Date();
-var monthNames = [ "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December" ];
 
-var gui_day = now.getDate().toString();
-var gui_month = monthNames[now.getMonth()];
-var gui_year = (1900 + now.getYear()).toString();
-var gui_cp, gui_cg, gui_cu, gui_cm;
-var show_zero_vals = 0;
+var gui_day = 0;
+var gui_month = "";
+var gui_year = 0;
 var map;
 
+var conn_status = "disconnected";
+var conn_info = "";
+var conn_warning = "";
+
+var set_status = function(){
+	$('#status-field').html(conn_status + conn_info + conn_warning);
+}
+
+var ua = window.navigator.userAgent;
+var msie = ua.indexOf("MSIE ");
+
+if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))
+{
+	var ieversion = parseInt(ua.substring(msie + 5, ua.indexOf(".", msie)));
+	if(ieversion < 10)
+	{
+		conn_info = "Internet Explorer " + ieversion + " is too old, please upgrade to 10!";
+	}
+}
+
+var ff = ua.indexOf("Firefox/");
+if(ff > 0)
+{
+	var ffversion = parseInt(ua.substring(ff+8, ua.indexOf(".", ff)));
+	if(ffversion < 24)
+	{
+                conn_info = "Firefox " + ffversion + " is too old, please upgrade to 24!";
+	}
+}
+
+var cr = ua.indexOf("Chrome/");
+if(cr > 0)
+{
+        var crversion = parseInt(ua.substring(ff+8, ua.indexOf(".", ff)));
+        if(crversion < 14)
+        {
+                conn_info = "Chrome " + ffversion + " is too old, please upgrade to 14!";
+        }
+}
+
+set_status();
+
 socket.on('connect', function () {
-	socket.emit('GetStat', {'day': gui_day, 'month': gui_month, 'year': gui_year}); // sync
-	console.log('connected');
-} );
+	socket.emit('clienthello'); // sync
+	conn_warning = "";
+	conn_status = "connected";
+	set_status();
+});
 
 socket.on('error', function (e) {
-	console.log('System', e ? e : 'An unknown error occurred');
-} );
+	conn_status = "disconnected";
+	conn_warning = "System error: " + e;
+	set_status();
+});
 
 socket.on('realtimedata', function(data) {
         if(typeof data == "undefined"){return;};
@@ -32,7 +73,7 @@ socket.on('realtimedata', function(data) {
         graphdata['graph-windspeed-realtime'].graphaxisY.render();
 	graphdata['graph-windspeed-realtime'].legend.render();
 	$('#windspeed-realtime').html(Math.floor(data.windspeed*2)/2 + ' m/s');
-	$('#datetime-realtime').html(data.time);
+	$('#datetime-realtime').html(data.time + "( now: " + new Date().toUTCString() +  " )" );
 	$('#powerval-realtime').html( parseFloat(parseInt(0.350814814815 * parseFloat(data.windspeed)*parseFloat(data.windspeed)*parseFloat(data.windspeed) * 1000))/1000+ ' Ws');
 	$('#graph-windspeed-realtime-label0').html( '<b>m/s</b>' );
 	$('#graph-windspeed-realtime-label1').html( '<b>s</b>' );
@@ -41,37 +82,60 @@ socket.on('realtimedata', function(data) {
 	$('status-realtime').html( data.status );
 });
 
-var func_updateMenu =  function(data) {
-        var tmp = "";
-        for(var i in data.val)
-        {
-                tmp += "<li id='" + data.val[i] + "' name='" + data.fkt + "' class='dpmenu'>" + data.val[i] + "</li>\n";
-        }
-        $("#" + data.id).html(tmp);
-
-        $('.dpmenu').click(function(ev) {
-                var target      = ev.currentTarget,
-                        targetid    = $(target).attr('id'),
-                        name        = $(target).attr('name');
-                if(name == 'year')
-                        gui_year = targetid;
-                if(name == 'month')
-                        gui_month = targetid;
-                if(name == 'day')
-                        gui_day = targetid;
-                socket.emit('GetStat', {'day': gui_day, 'month': gui_month, 'year': gui_year}); // sync
-        });
+var menu_onclick = function(target){
+        var targetid    = $(target).attr('id');
+        var name        = $(target).attr('name');
+	console.log(" targetid " + targetid + " name " + name );
+                        if(name == 'year' && targetid != gui_year)
+                                socket.emit('UpdateYear', {'year': targetid});
+                        if(name == 'month' && targetid != gui_month)
+                                socket.emit('UpdateMonth', {'month': targetid, 'year': gui_year});
+                        if(name == 'day' && targetid != gui_day)
+                                socket.emit('UpdateDay', {'day': targetid, 'month': gui_month, 'year': gui_year});
 };
 
-var func_updateGraph = function(id) {
+socket.on('UpdateMenu', function(data) {
+        var tmp = "";
+	//console.log("update menu " + data.fkt);
+        for(var i in data.val)
+        {
+                tmp += "<li id='" + data.val[i] + "' name='" + data.fkt + "' class='dpmenu' onclick='menu_onclick(this)'>" + data.val[i] + "</li>\n";
+        }
+        $("#dd_"+data.fkt).html(tmp);
+});
+
+socket.on('UpdateValue', function(data) {
+	// update internal date too
+	if(data.id == "title-year")
+	{
+		gui_year = data.val;
+        	$("#title-year").html('&nbsp;' + gui_year);
+	}
+        else if(data.id == "title-month")
+       	{
+                gui_month = data.val;
+                $("#title-month").html('&nbsp;' + gui_month + '&nbsp;' + gui_year);
+        }
+        else if(data.id == "title-day")
+       	{
+                gui_day = data.val;
+                $("#title-day").html('&nbsp;' + gui_day + '.&nbsp;' + gui_month + '&nbsp;' + gui_year);
+        }
+	else
+	{
+		$("#" + data.id).html('&nbsp;' + data.val);
+	}
+});
+
+var func_updateGraph = function(id){ 
                         if(typeof graphdata[id] == "undefined")
                         {
-                                console.log(id + ' not found !');
+                                console.log('graph ' + id + ' not found !');
                                 return;
                         }
 			// create a deep copy
 			var data = jQuery.extend(true, {}, graphdata[id].rawdata);
-                                if(id.toString().indexOf('hist') > -1)
+                                if(data.id.toString().indexOf('hist') > -1)
                                 {
                                         graphdata[id].graph.series[1].data = data.val;
                                         graphdata[id].graph.series[1].name = data.legend;
@@ -93,7 +157,7 @@ var func_updateGraph = function(id) {
 						console.log("enabled");
 
                                         }
-					console.log("setting graphdata");
+					//console.log("setting graphdata");
                                 }
                                 else
                                 {
@@ -118,26 +182,16 @@ var func_updateGraph = function(id) {
                                 }
 };
 
-socket.on('UpdateMenu', func_updateMenu);
-
-socket.on('UpdateGUI', function(data) {
-	switch (data.fkt) {
-		case 'val':
-			$("#" + data.id).html(data.val); // # is jQuery for 'get by id'
-			break;
-		case 'graph':
+socket.on('UpdateGraph', function(data) {
                         if(typeof graphdata[data.id] == "undefined")
                         {
                                 console.log(data.id + ' not found !');
-                                break;
+                                return;
                         }
                         // make a copy
                         graphdata[data.id].rawdata = data;
 			func_updateGraph(data.id);
-			break;
-	}
-} );
-
+});
 
 function getPPI(){
   // create an empty element
@@ -155,7 +209,7 @@ function getPPI(){
   return parseFloat(ppi);
 }
 
-//JQuery dark magic
+//JQuery dark magic, adds 'hide()' and 'show()' to each element
 (function ($) {
       $.each(['show', 'hide'], function (i, ev) {
         var el = $.fn[ev];
@@ -170,18 +224,6 @@ $(document).ready(function() {
 	$('.nav-tabs').each(function(){
 		$(this).css('font-size', getPPI()/5+'px');
 		console.log('setting fonsize ' + getPPI()/5+'px');
-	});
-	$('.dpmenu').click(function(ev) {
-		var target      = ev.currentTarget,
-			targetid    = $(target).attr('id'),
-			name        = $(target).attr('name');
-		if(name == 'year')
-			gui_year = targetid;
-		if(name == 'month')
-			gui_month = targetid;
-		if(name == 'day')
-			gui_day = targetid;
-		socket.emit('GetStat', {'day': gui_day, 'month': gui_month, 'year': gui_year}); // sync
 	});
 	$('#map').click(function(){
                 if(typeof map == "undefined")
@@ -206,7 +248,6 @@ $(document).ready(function() {
                 $('#' + this.id + '-chart').height( $('.container').width() * 0.35 );
                 $('#' + this.id + '-axis1').width(  $('.container').width() * 0.75 );
 		$('#' + this.id + '-axis0').height( $('.container').width() * 0.35 );
-
 
                 var series = [{
                               color: 'steelblue',

@@ -1,0 +1,388 @@
+<!DOCTYPE html5>
+<html lang="de">
+  <head>
+    <title>Webinterface</title>
+    <meta charset="utf-8"/>
+    <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link type="text/css" href="css/bootstrap-theme.min.css" rel="stylesheet"/>
+    <link type="text/css" href="css/slider.css" rel="stylesheet"/>
+    <link type="text/css" href="css/rickshaw.min.css" rel="stylesheet"/>
+    <link type="text/css" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/Rickshaw/graph.css"/>
+    <script type="text/javascript" src="socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-slider.js"></script>
+    <script type="text/javascript" src="js/d3.min.js"></script>
+    <script type="text/javascript" src="js/rickshaw.min.js"></script>
+    <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+    <script type="text/javascript" src="js/desktop.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <p style="display:inline">Status:</p>
+        <p id="status-field" style="display:inline"></p>
+      </div>
+      <div class="row">
+        <div>
+          <ul class="nav nav-tabs">
+            <li><a href="#tabyear" data-toggle="tab">Jahr</a></li>
+            <li><a href="#tabmonth" data-toggle="tab">Monat</a></li>
+            <li><a href="#tabdays" data-toggle="tab">Tag</a></li>
+            <li class="active"><a href="#tabnow" data-toggle="tab">Jetzt</a></li>
+            <li><a href="#tababout" data-toggle="tab">&uuml;ber</a></li>
+          </ul>
+          <div class="tab-content">
+            <div id="tabyear" class="tab-pane">
+              <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                  <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Jahr wechseln<b class="caret"></b></a>
+                    <ul id="dd_year" class="dropdown-menu">
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+              <h1 style="display:inline">Jahr</h1>
+              <h1 id="title-year" style="display:inline"></h1>
+              <h3>Histogramm</h3>
+              <div class="well">
+                <div id="graph-hist-year" class="graph-container multi">
+                  <p id="graph-hist-year-label0" class="y_label">s</p>
+                  <div id="graph-hist-year-axis0" class="y_axis"> </div>
+                  <div id="graph-hist-year-chart" class="chart"></div>
+                  <div id="graph-hist-year-legend" class="legend"></div>
+                  <div id="graph-hist-year-axis1" class="x_axis"></div>
+                  <p id="graph-hist-year-label1" class="x_label">m/s</p>
+                </div>
+                <div id="graph-hist-year-btn1" class="btn-group btn-toggle">
+                  <button class="btn btn-lg btn-default enabled">Nullte Spalte Verstecken</button>
+                  <button class="btn btn-lg btn-default btn-primary active">Nullte Spalte Zeigen</button>
+                </div>
+              </div>
+              <h3>Histogramm</h3>
+              <div class="well">
+                <div id="graph-hist-power-year" class="graph-container multi">
+                  <p id="graph-hist-power-year-label0" class="y_label">kWh</p>
+                  <div id="graph-hist-power-year-axis0" class="y_axis"></div>
+                  <div id="graph-hist-power-year-chart" class="chart"></div>
+                  <div id="graph-hist-power-year-legend" class="legend"></div>
+                  <div id="graph-hist-power-year-axis1" class="x_axis"></div>
+                  <p id="graph-hist-power-year-label1" class="x_label">m/s</p>
+                </div>
+              </div>
+              <h3>Durchschnittsgeschwindigkeit</h3>
+              <div class="well">
+                <div id="graph-aver-speed-year" name="graph" class="graph-container">
+                  <p id="graph-aver-speed-year-label0" class="y_label">s</p>
+                  <div id="graph-aver-speed-year-axis0" class="y_axis"></div>
+                  <div id="graph-aver-speed-year-chart" class="chart"></div>
+                  <div id="graph-aver-speed-year-legend" class="legend"></div>
+                  <div id="graph-aver-speed-year-axis1" class="x_axis"></div>
+                  <p id="graph-aver-speed-year-label1" class="x_label">m/s</p>
+                </div>
+              </div>
+              <h3>Windgeschwindigkeit &uuml;ber 4 m/s</h3>
+              <div class="well">
+                <div id="graph-over-4msec-year" name="graph" class="graph-container">
+                  <p id="graph-over-4msec-year-label0" class="y_label">s</p>
+                  <div id="graph-over-4msec-year-axis0" class="y_axis"></div>
+                  <div id="graph-over-4msec-year-chart" class="chart"></div>
+                  <div id="graph-over-4msec-year-legend" class="legend"></div>
+                  <div id="graph-over-4msec-year-axis1" class="x_axis"></div>
+                  <p id="graph-over-4msec-year-label1" class="x_label">Monat</p>
+                </div>
+              </div>
+              <h3>Windarbeit</h3>
+              <div class="well">
+                <div id="graph-powerval-year" name="graph" class="graph-container">
+                  <p id="graph-powerval-year-label0" class="y_label">kWh</p>
+                  <div id="graph-powerval-year-axis0" class="y_axis"></div>
+                  <div id="graph-powerval-year-chart" class="chart"></div>
+                  <div id="graph-powerval-year-legend" class="legend"></div>
+                  <div id="graph-powerval-year-axis1" class="x_axis"></div>
+                  <p id="graph-powerval-year-label1" class="x_label">Monat</p>
+                </div>
+              </div>
+              <h3>Elektrische Arbeit</h3>
+              <div class="well">
+                <div id="graph-electricpowerval-year" name="graph" class="graph-container">
+                  <p id="graph-electricpowerval-year-label0" class="y_label">kWh</p>
+                  <div id="graph-electricpowerval-year-axis0" class="y_axis"></div>
+                  <div id="graph-electricpowerval-year-chart" class="chart"></div>
+                  <div id="graph-electricpowerval-year-legend" class="legend"></div>
+                  <div id="graph-electricpowerval-year-axis1" class="x_axis"></div>
+                  <p id="graph-electricpowerval-year-label1" class="x_label">Monat</p>
+                </div>
+              </div>
+              <h3>Werte</h3>
+              <div class="well">
+                <div>
+                  <p style="display:inline">Maximale Windgeschwindigkeit:</p>
+                  <p id="top-speed-year" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Durschschnittliche Windgeschwindigkeit:</p>
+                  <p id="aver-speed-year" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Niedrigste Windgeschwindigkeit:</p>
+                  <p id="bottom-speed-year" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Windarbeit pro 1qm Rotorfl&auml;che:</p>
+                  <p id="powerval-year" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Sekunden gesamt:</p>
+                  <p id="seconds-sum-year" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Windgeschwindigkeit &uuml;ber 4 m/s</p>
+                  <p id="seconds-over-4msec-year" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Elektrische Arbeit:</p>
+                  <p id="electricpowerval-year" style="display:inline"></p>
+                </div>
+              </div>
+            </div>
+            <div id="tabmonth" class="tab-pane">
+              <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                  <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Monat wechseln<b class="caret"></b></a>
+                    <ul id="dd_month" class="dropdown-menu">
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+              <h1 style="display:inline">Monat</h1>
+              <h1 id="title-month" style="display:inline"></h1>
+              <h3>Histogramm</h3>
+              <div class="well">
+                <div id="graph-hist-month" class="graph-container multi" title="m/s">
+                  <p id="graph-hist-month-label0" class="y_label">s</p>
+                  <div id="graph-hist-month-axis0" class="y_axis"> </div>
+                  <div id="graph-hist-month-chart" class="chart"></div>
+                  <div id="graph-hist-month-legend" class="legend"></div>
+                  <div id="graph-hist-month-axis1" class="x_axis"></div>
+                  <p id="graph-hist-month-label1" class="x_label">m/s</p>
+                </div>
+                <div id="graph-hist-month-btn1" class="btn-group btn-toggle">
+                  <button class="btn btn-lg btn-default enabled">Nullte Spalte Verstecken</button>
+                  <button class="btn btn-lg btn-default btn-primary active">Nullte Spalte Zeigen</button>
+                </div>
+              </div>
+              <h3>Histogramm</h3>
+              <div class="well">
+                <div id="graph-hist-power-month" class="graph-container multi">
+                  <p id="graph-hist-power-month-label0" class="y_label">kWh</p>
+                  <div id="graph-hist-power-month-axis0" class="y_axis"></div>
+                  <div id="graph-hist-power-month-chart" class="chart"></div>
+                  <div id="graph-hist-power-month-legend" class="legend"></div>
+                  <div id="graph-hist-power-month-axis1" class="x_axis"></div>
+                  <p id="graph-hist-power-month-label1" class="x_label">m/s</p>
+                </div>
+              </div>
+              <h3>Durchschnittsgeschwindigkeit</h3>
+              <div class="well">
+                <div id="graph-aver-speed-month" name="graph" class="graph-container">
+                  <p id="graph-aver-speed-month-label0" class="y_label">s</p>
+                  <div id="graph-aver-speed-month-axis0" class="y_axis"></div>
+                  <div id="graph-aver-speed-month-chart" class="chart"></div>
+                  <div id="graph-aver-speed-month-legend" class="legend"></div>
+                  <div id="graph-aver-speed-month-axis1" class="x_axis"></div>
+                  <p id="graph-aver-speed-month-label1" class="x_label">m/s</p>
+                </div>
+              </div>
+              <h3>Windgeschwindigkeit &uuml;ber 4 m/s</h3>
+              <div class="well">
+                <div id="graph-over-4msec-month" name="graph" class="graph-container">
+                  <p id="graph-over-4msec-month-label0" class="y_label">s</p>
+                  <div id="graph-over-4msec-month-axis0" class="y_axis"></div>
+                  <div id="graph-over-4msec-month-chart" class="chart"></div>
+                  <div id="graph-over-4msec-month-legend" class="legend"></div>
+                  <div id="graph-over-4msec-month-axis1" class="x_axis"></div>
+                  <p id="graph-over-4msec-month-label1" class="x_label">m/s</p>
+                </div>
+              </div>
+              <h3>Windarbeit</h3>
+              <div class="well">
+                <div id="graph-powerval-month" name="graph" class="graph-container">
+                  <p id="graph-powerval-month-label0" class="y_label">kWh</p>
+                  <div id="graph-powerval-month-axis0" class="y_axis"></div>
+                  <div id="graph-powerval-month-chart" class="chart"></div>
+                  <div id="graph-powerval-month-legend" class="legend"></div>
+                  <div id="graph-powerval-month-axis1" class="x_axis"></div>
+                  <p id="graph-powerval-month-label1" class="x_label">Tag</p>
+                </div>
+              </div>
+              <h3>Elektrische Arbeit</h3>
+              <div class="well">
+                <div id="graph-electricpowerval-month" name="graph" class="graph-container">
+                  <p id="graph-electricpowerval-month-label0" class="y_label">kWh</p>
+                  <div id="graph-electricpowerval-month-axis0" class="y_axis"></div>
+                  <div id="graph-electricpowerval-month-chart" class="chart"></div>
+                  <div id="graph-electricpowerval-month-legend" class="legend"></div>
+                  <div id="graph-electricpowerval-month-axis1" class="x_axis"></div>
+                  <p id="graph-electricpowerval-month-label1" class="x_label">Tag</p>
+                </div>
+              </div>
+              <h3>Werte</h3>
+              <div class="well">
+                <div>
+                  <p style="display:inline">Maximale Windgeschwindigkeit:</p>
+                  <p id="top-speed-month" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Durschschnittliche Windgeschwindigkeit:</p>
+                  <p id="aver-speed-month" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Niedrigste Windgeschwindigkeit:</p>
+                  <p id="bottom-speed-month" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Windarbeit pro 1qm Rotorfl&auml;che:</p>
+                  <p id="powerval-month" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Sekunden gesamt:</p>
+                  <p id="seconds-sum-month" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Windgeschwindigkeit &uuml;ber 4 m/s</p>
+                  <p id="seconds-over-4msec-month" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Elektrische Arbeit:</p>
+                  <p id="electricpowerval-month" style="display:inline"></p>
+                </div>
+              </div>
+            </div>
+            <div id="tabdays" class="tab-pane">
+              <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                  <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Tag wechseln<b class="caret"> </b></a>
+                    <ul id="dd_day" class="dropdown-menu">
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+              <h1 style="display:inline">Tag</h1>
+              <h1 id="title-day" style="display:inline"></h1>
+              <h3>Histogramm</h3>
+              <div class="well">
+                <div id="graph-hist-day" class="graph-container multi">
+                  <p id="graph-hist-day-label0" class="y_label">s</p>
+                  <div id="graph-hist-day-axis0" class="y_axis"></div>
+                  <div id="graph-hist-day-chart" class="chart"></div>
+                  <div id="graph-hist-day-legend" class="legend"></div>
+                  <div id="graph-hist-day-axis1" class="x_axis"></div>
+                  <p id="graph-hist-day-label1" class="x_label">m/s</p>
+                </div>
+                <div id="graph-hist-day-btn1" class="btn-group btn-toggle">
+                  <button class="btn btn-lg btn-default enabled">Nullte Spalte Verstecken</button>
+                  <button class="btn btn-lg btn-default btn-primary active">Nullte Spalte Zeigen</button>
+                </div>
+              </div>
+              <h3>Histogramm</h3>
+              <div class="well">
+                <div id="graph-hist-power-day" class="graph-container multi">
+                  <p id="graph-hist-power-day-label0" class="y_label">kWh</p>
+                  <div id="graph-hist-power-day-axis0" class="y_axis"></div>
+                  <div id="graph-hist-power-day-chart" class="chart"></div>
+                  <div id="graph-hist-power-day-legend" class="legend"></div>
+                  <div id="graph-hist-power-day-axis1" class="x_axis"></div>
+                  <p id="graph-hist-power-day-label1" class="x_label">m/s</p>
+                </div>
+              </div>
+              <h3>Werte</h3>
+              <div class="well">
+                <div>
+                  <p style="display:inline">Maximale Windgeschwindigkeit:</p>
+                  <p id="top-speed-day" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Durschschnittliche Windgeschwindigkeit:</p>
+                  <p id="aver-speed-day" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Niedrigste Windgeschwindigkeit:</p>
+                  <p id="bottom-speed-day" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Windarbeit pro 1qm Rotorfl&auml;che</p>
+                  <p id="powerval-day" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Sekunden gesamt:               </p>
+                  <p id="seconds-sum-day" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Windgeschwindigkeit &uuml;ber 4 m/s:</p>
+                  <p id="seconds-over-4msec-day" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Elektrische Arbeit:</p>
+                  <p id="electricpowerval-day" style="display:inline"></p>
+                </div>
+              </div>
+            </div>
+            <div id="tabnow" class="tab-pane active">
+              <h2>Aktuelle Werte</h2>
+              <div class="well">
+                <div>
+                  <p style="display:inline">Windgeschwindigkeit:</p>
+                  <p id="windspeed-realtime" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Windarbeit pro 1qm Rotorfl&auml;che:</p>
+                  <p id="powerval-realtime" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Zeitpunkt der Messung:</p>
+                  <p id="datetime-realtime" style="display:inline"></p>
+                </div>
+                <div>
+                  <p style="display:inline">Elektrische Arbeit:</p>
+                  <p id="electricpowerval-realtime" style="display:inline"> </p>
+                </div>
+                <div>
+                  <p id="status-realtime"></p>
+                </div>
+              </div>
+              <h3>Graph</h3>
+              <div class="well">
+                <div id="graph-windspeed-realtime" name="graph" class="graph-container realtime line">
+                  <p id="graph-windspeed-realtime-label0" class="y_label">m/s</p>
+                  <div id="graph-windspeed-realtime-axis0" class="y_axis"></div>
+                  <div id="graph-windspeed-realtime-chart" class="chart"></div>
+                  <div id="graph-windspeed-realtime-legend" class="legend"></div>
+                  <div id="graph-windspeed-realtime-axis1" class="x_axis"></div>
+                  <p id="graph-windspeed-realtime-label1" class="x_label">s</p>
+                </div>
+              </div>
+            </div>
+            <div id="tababout" class="tab-pane">
+              <h2>Bilder</h2>
+              <div class="well"></div>
+              <h2>Ort</h2>
+              <div class="well">
+                <div id="map" style="width: 80%; height:40%">
+                  <p>Hier klicken zum Darstellen</p>
+                </div>
+              </div>
+              <h2>Formeln</h2>
+              <div class="well"><img src="windpower.png"/><br/><img src="formelzeichen.png"/></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p>by Patrick Rudolph</p><a href="http://4q8.de/?page_id=20">Impressum</a>
+    </div>
+  </body>
+</html>

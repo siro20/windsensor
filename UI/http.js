@@ -14,95 +14,28 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+var fs = require('fs');
 var express = require('express');
-var app     = express(),
+var app     = express(), //for socket.io
     http    = require('http'),
     server  = http.createServer(app);
 var configuration = require('./config.json');
 
-var oneDay = 86400000;
+app.use(express.static(__dirname + '/public'));
 
-// jade setup
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade'); // Set jade as default render engine
-app.use(express.static(__dirname + '/public', { maxAge: oneDay }));
-
-app.locals.pretty = true; // format output of jade
+app.locals.pretty = true;
 
 app.get('/', function(req, res) {
-	var years = [];
-	var month = [];
-	var days = [];
-	var now = new Date();
-	for(var i in exports.data)
-	{
-		years.push(i);
-	}
-	for(var i in exports.data[(1900 + now.getYear()).toString()])
-	{
-		if(i != "total")
-		{
-			month.push(i);
-		}
-	}
-	for(var i in exports.data[(1900 + now.getYear()).toString()][exports.monthNames[now.getMonth()]])
-	{
-		if(i != "total")
-		{
-			days.push(i);
-		}
-	}
 	if(req.headers["accept-language"].indexOf("de") > -1 ){
-		res.render("desktop", {
-						   pagetitle: "Webinterface",
-						   years: years,
-						   month: month,
-						   days:  days,
-						  });
+		res.send(fs.readFileSync('./views/index-de.html', 'utf8'));
 	}
 	else
 	{
-		res.render("desktop-en", {
-						   pagetitle: "Webinterface",
-						   years: years,
-						   month: month,
-						   days:  days,
-						  });
+                res.send(fs.readFileSync('./views/index-en.html', 'utf8'));
 	}
-
-});
-
-app.get('/mobile', function(req, res) {
-	var years = [];
-	var month = [];
-	var days = [];
-	var now = new Date();
-	for(var i in exports.data)
-	{
-		years.push(i);
-	}
-	for(var i in exports.data[(1900 + now.getYear()).toString()])
-	{
-		if(i != "total")
-		{
-			month.push(i);
-		}
-	}
-	for(var i in exports.data[(1900 + now.getYear()).toString()][exports.monthNames[now.getMonth()]])
-	{
-		if(i != "total")
-		{
-			days.push(i);
-		}
-	}
-	res.render('mobile', {
-					pagetitle: "Webinterface",
-						   years: years,
-						   month: month,
-						   days:  days,
-					 });
 });
 
 server.listen(configuration.httpserver.port);
+var io = require('socket.io').listen(server);
 
-exports.server = server;
+exports.io = io;

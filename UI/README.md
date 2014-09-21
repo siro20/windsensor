@@ -14,7 +14,7 @@ required nodejs modules:
 nodejs configuration:
 -------------
 file config.json:
-{
+ {
   "windserver": {
     "port": 2400,
     "hostname": "127.0.0.1"
@@ -23,7 +23,7 @@ file config.json:
     "port": 4800
   },
   "datafilename": "data.json"
-}
+ }
 
 this will configure the HTTP server to listen on port 4800, and tell the TCP client to connect to host 127.0.0.1 on port 2400.
 This programm assumes the windsensorserver.py script running on localhost port 2400 transmitting the current wind speed.

@@ -4,56 +4,13 @@ NodeJs webserver to display histograms, statistics and realtime wind data.
 
 Python script to collect and send realtime winddata over TCP/IP.
 
-required nodejs modules:
---------------
-* express
-* jade
-* recon
-* socket.io
-
- cd to directory UI
- run "npm install" to install all modules.
- run "npm start" to launch the application.
-
-nodejs configuration:
+UI:
 -------------
-file config.json:
+this folder contains the nodejs files. It runs a webserver, handles websockets for realtime data transmission, creates a database and acts as TCP/IP client to receive data from the python script.
 
-{
-
-  "windserver": {
-    "port": 2400,
-    "hostname": 127.0.0.1
-  }
-  
-  "httpserver": {
-    "port": 4800
-  }
-  
-}
-
-this will configure the HTTP server to listen on port 4800, and tell the TCP client to connect to host 127.0.0.1 on port 2400.
-
-required python modules:
-----------------
-* RPi.GPIO
-
-python configuration:
+server:
 -------------------
-The python script runs the TCP/IP server on port 2400 as default. At the moment there's no config for the python script.
-It samples the frequency on GPIO 0, converts it to rpm, and transmit this value once a second to all connected TCP/IP clients.
-
-hardware:
-----------------
-* connect an impulse generating wind sensor to GND and GPIO0 (raspberry pi pin3).
-* change the conversion from impulses to m/s in windsensorserver.py
-* the current implementation is for Eltako WS100 
-
-run:
-----------------
-node server.js
-
-python windsensorserver.py
+this folder contains the python files. It samples the frequency on RaspberryPI pin3 and converts it to the actual windspeed. This script runs a TCP/IP server on port 2400. Every connected TCP/IP client receives the current wind speed once a second.
 
 license:
 ----------------

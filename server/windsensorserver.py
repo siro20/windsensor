@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #   networking daemon running on Raspberry PI for wind-measuring
-#   Copyright (C) 2014 Patrick Rudolph
+#   Copyright (C) 2014-2015 Patrick Rudolph
 
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -50,8 +50,10 @@ def ws100_imp_to_mpersec(val):
 
 def threadeval():
         global imp_per_sec
+        global actual_windspeed_msec
         while 1:
                 actual_windspeed_msec = ws100_imp_to_mpersec(imp_per_sec)
+                print "actual_windspeed_msec %f" % actual_windspeed_msec
                 imp_per_sec = 0
                 for x in events:
                     x.set()
@@ -68,6 +70,7 @@ PORT = 2400
 
 class TCPConnectionHandler(SocketServer.BaseRequestHandler):
     def handle(self):
+        global actual_windspeed_msec
         self.event = threading.Event()
         events.append(self.event)
         while 1:
